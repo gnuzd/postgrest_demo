@@ -1,0 +1,13 @@
+{
+  "name": "studio",
+  "private": true,
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "drizzle-kit": "^0.31.4",
+    "drizzle-orm": "^0.44.5",
+    "postgres": "^3.4.7"
+  },
+  "scripts": {
+    "studio": "drizzle-kit studio --port 4000 --verbose"
+  }
+}
