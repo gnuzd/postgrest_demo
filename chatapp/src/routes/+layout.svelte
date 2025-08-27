@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import { Toaster } from '$lib/components/ui/sonner';
 	import favicon from '$lib/assets/favicon.svg';
 
 	let { children } = $props();
@@ -9,4 +10,5 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
+<Toaster />
 {@render children?.()}

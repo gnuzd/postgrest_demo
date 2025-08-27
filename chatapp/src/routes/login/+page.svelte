@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { toast } from 'svelte-sonner';
+
 	import { Button } from '$lib/components/ui/button';
 	import {
 		Card,
@@ -9,6 +13,18 @@
 	} from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import { loginSchema } from '$lib/schema.js';
+
+	const { form, enhance, errors, message } = superForm(
+		{ email: '', password: '' },
+		{ validators: zodClient(loginSchema) }
+	);
+
+	message.subscribe((content) => {
+		if (content) {
+			toast.error(content);
+		}
+	});
 </script>
 
 <div class="flex items-center justify-center min-h-screen py-12">
@@ -18,22 +34,37 @@
 			<CardDescription>Enter your email below to login to your account</CardDescription>
 		</CardHeader>
 		<CardContent>
-			<div class="grid gap-4">
-				<div class="grid gap-2">
-					<Label for="email">Email</Label>
-					<Input id="email" type="email" placeholder="m@example.com" required />
-				</div>
-				<div class="grid gap-2">
-					<div class="flex items-center">
-						<Label for="password">Password</Label>
-						<a href="/login" class="ml-auto inline-block text-sm underline">
-							Forgot your password?
-						</a>
+			<form method="POST" use:enhance>
+				<div class="grid gap-4">
+					<div class="grid gap-2">
+						<Label for="email">Email</Label>
+						<Input
+							id="email"
+							type="email"
+							name="email"
+							placeholder="example@coderpush.com"
+							aria-invalid={!!$errors.email?.length}
+							bind:value={$form.email}
+						/>
 					</div>
-					<Input id="password" type="password" required />
+					<div class="grid gap-2">
+						<div class="flex items-center">
+							<Label for="password">Password</Label>
+							<a href="/login" class="ml-auto inline-block text-sm underline">
+								Forgot your password?
+							</a>
+						</div>
+						<Input
+							id="password"
+							type="password"
+							name="password"
+							bind:value={$form.password}
+							aria-invalid={!!$errors.password?.length}
+						/>
+					</div>
+					<Button type="submit" class="w-full">Login</Button>
 				</div>
-				<Button type="submit" class="w-full">Login</Button>
-			</div>
+			</form>
 			<div class="mt-4 text-center text-sm">
 				Don't have an account?
 				<a href="/register" class="underline"> Sign up </a>
