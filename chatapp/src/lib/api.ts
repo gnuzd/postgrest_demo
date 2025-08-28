@@ -12,6 +12,6 @@ export default class Api {
 	}
 
 	login(email: string, password: string) {
-		return this.instance.post('/rpc/login', { email, password });
+		return this.instance.post('/rpc/login', { p_email: email, password });
 	}
 }
