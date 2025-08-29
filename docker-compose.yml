@@ -27,6 +27,9 @@ services:
       PGRST_DB_URI: postgres://authenticator:password@postgres:5432/app_db
       PGRST_DB_SCHEMA: public,private
       PGRST_DB_ANON_ROLE: web_anon
+      PGRST_LOG_QUERY: "main-query"
+      PGRST_LOG_LEVEL: "debug"
+      # PGRST_DB_ANON_ROLE: postgres
       PGRST_JWT_SECRET: "gRhaJ99BB3EhcjpwI1WTA7pLywa+J25X"
     ports:
       - "3000:3000"

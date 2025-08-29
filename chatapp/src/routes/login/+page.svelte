@@ -1,19 +1,11 @@
-<script lang="ts">
+<script>
+	import { toast } from 'svelte-sonner';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { toast } from 'svelte-sonner';
 
-	import { Button } from '$lib/components/ui/button';
-	import {
-		Card,
-		CardContent,
-		CardDescription,
-		CardHeader,
-		CardTitle
-	} from '$lib/components/ui/card';
-	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
-	import { loginSchema } from '$lib/schema.js';
+	import Button from '$lib/components/Button.svelte';
+	import Input from '$lib/components/Input.svelte';
+	import { loginSchema } from '$lib/schema';
 
 	const { form, enhance, errors, message } = superForm(
 		{ email: '', password: '' },
@@ -27,48 +19,33 @@
 	});
 </script>
 
-<div class="flex items-center justify-center min-h-screen py-12">
-	<Card class="mx-auto w-full max-w-md">
-		<CardHeader>
-			<CardTitle class="text-2xl">Login</CardTitle>
-			<CardDescription>Enter your email below to login to your account</CardDescription>
-		</CardHeader>
-		<CardContent>
-			<form method="POST" use:enhance>
-				<div class="grid gap-4">
-					<div class="grid gap-2">
-						<Label for="email">Email</Label>
-						<Input
-							id="email"
-							type="email"
-							name="email"
-							placeholder="example@coderpush.com"
-							aria-invalid={!!$errors.email?.length}
-							bind:value={$form.email}
-						/>
-					</div>
-					<div class="grid gap-2">
-						<div class="flex items-center">
-							<Label for="password">Password</Label>
-							<a href="/login" class="ml-auto inline-block text-sm underline">
-								Forgot your password?
-							</a>
-						</div>
-						<Input
-							id="password"
-							type="password"
-							name="password"
-							bind:value={$form.password}
-							aria-invalid={!!$errors.password?.length}
-						/>
-					</div>
-					<Button type="submit" class="w-full">Login</Button>
-				</div>
-			</form>
-			<div class="mt-4 text-center text-sm">
-				Don't have an account?
-				<a href="/register" class="underline"> Sign up </a>
-			</div>
-		</CardContent>
-	</Card>
+<div class="card w-sm border border-base-300 m-auto">
+	<div class="card-body space-y-2">
+		<div class="flex flex-col gap-1">
+			<p class="text-xl font-semibold">Login</p>
+			<p class="text-base-content/80">Enter your email below to login to your account</p>
+		</div>
+		<form class="flex flex-col" method="POST" use:enhance>
+			<Input
+				label="Email"
+				type="email"
+				name="email"
+				error={!!$errors.email?.length}
+				bind:value={$form.email}
+				hint={$errors.email?.[0]}
+			/>
+			<Input
+				label="Password"
+				type="password"
+				name="password"
+				bind:value={$form.password}
+				error={!!$errors.password?.length}
+				hint={$errors.password?.[0]}
+			/>
+			<Button type="submit" class="mt-5">Login</Button>
+			<p class="text-center mt-3 text-base-content/80">
+				Don't have an account? <a href="/register" class="link font-medium">Sign up</a>
+			</p>
+		</form>
+	</div>
 </div>

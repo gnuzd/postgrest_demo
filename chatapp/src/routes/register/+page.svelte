@@ -1,38 +1,51 @@
-<script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import {
-		Card,
-		CardContent,
-		CardDescription,
-		CardHeader,
-		CardTitle
-	} from '$lib/components/ui/card';
-	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
+<script>
+	import { toast } from 'svelte-sonner';
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+
+	import Button from '$lib/components/Button.svelte';
+	import Input from '$lib/components/Input.svelte';
+	import { loginSchema } from '$lib/schema';
+
+	const { form, enhance, errors, message } = superForm(
+		{ email: '', password: '' },
+		{ validators: zodClient(loginSchema) }
+	);
+
+	message.subscribe((content) => {
+		if (content) {
+			toast.error(content);
+		}
+	});
 </script>
 
-<div class="flex items-center justify-center min-h-screen py-12">
-	<Card class="mx-auto w-full max-w-md">
-		<CardHeader>
-			<CardTitle class="text-xl">Sign Up</CardTitle>
-			<CardDescription>Enter your information to create an account</CardDescription>
-		</CardHeader>
-		<CardContent>
-			<div class="grid gap-4">
-				<div class="grid gap-2">
-					<Label for="email">Email</Label>
-					<Input id="email" type="email" placeholder="m@example.com" required />
-				</div>
-				<div class="grid gap-2">
-					<Label for="password">Password</Label>
-					<Input id="password" type="password" required />
-				</div>
-				<Button type="submit" class="w-full">Create an account</Button>
-			</div>
-			<div class="mt-4 text-center text-sm">
-				Already have an account?
-				<a href="/login" class="underline"> Sign in </a>
-			</div>
-		</CardContent>
-	</Card>
+<div class="card w-sm border border-base-300 m-auto">
+	<div class="card-body space-y-2">
+		<div class="flex flex-col gap-1">
+			<p class="text-xl font-semibold">Register</p>
+			<p class="text-base-content/80">Enter your email below to register new account</p>
+		</div>
+		<form class="flex flex-col" method="POST" use:enhance>
+			<Input
+				label="Email"
+				type="email"
+				name="email"
+				error={!!$errors.email?.length}
+				bind:value={$form.email}
+				hint={$errors.email?.[0]}
+			/>
+			<Input
+				label="Password"
+				type="password"
+				name="password"
+				bind:value={$form.password}
+				error={!!$errors.password?.length}
+				hint={$errors.password?.[0]}
+			/>
+			<Button type="submit" class="mt-5">Register</Button>
+			<p class="text-center mt-3 text-base-content/80">
+				Already have an account? <a href="/login" class="link font-medium">Sign in</a>
+			</p>
+		</form>
+	</div>
 </div>

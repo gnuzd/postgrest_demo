@@ -1,16 +1,18 @@
 
 -- 0004_private_chat_rls.sql
 
+
 -- Functions for RLS and authentication (placeholder - will be more complex with actual JWT)
 CREATE FUNCTION private.current_user_id() RETURNS UUID LANGUAGE plpgsql AS $$
   BEGIN
-    RETURN (current_setting('request.jwt.claim.user_id', true)::UUID);
+    RETURN (current_setting('request.jwt.claims', true)::json->>'user_id');
   END;
 $$;
 
 -- RLS for private.users (users can see their own info)
 ALTER TABLE private.users ENABLE ROW LEVEL SECURITY;
-CREATE POLICY select_own_user ON private.users FOR SELECT USING (id = private.current_user_id());
+CREATE POLICY select_own_user ON private.users FOR ALL USING (is_admin = true OR id = private.current_user_id());
+CREATE POLICY admin_bypass_policy ON private.users FOR ALL TO app_admin USING (true);
 
 -- RLS for private.channels (users can see public channels and channels they are a member of)
 ALTER TABLE private.channels ENABLE ROW LEVEL SECURITY;

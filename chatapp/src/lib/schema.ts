@@ -8,3 +8,11 @@ export const loginSchema = z
 	.required();
 
 export type LoginSchema = typeof loginSchema;
+
+export const channleSchema = z
+	.object({
+		name: z.string(),
+		description: z.string(),
+		isPrivate: z.boolean()
+	})
+	.required({ name: true });

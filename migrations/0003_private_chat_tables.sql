@@ -7,11 +7,12 @@ CREATE TABLE private.users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-ALTER TABLE private.users OWNER TO app_user;
--- GRANT ALL PRIVILEGES ON private.users TO app_user; -- Not needed as app_user is owner
-
+-- ALTER TABLE private.users OWNER TO app_user;
+GRANT ALL PRIVILEGES ON private.users TO app_user; -- Not needed as app_user is owner
+GRANT ALL PRIVILEGES ON private.users TO app_admin; -- Not needed as app_user is owner
 
 -- Channels table (public and private channels)
 CREATE TABLE private.channels (
@@ -22,10 +23,9 @@ CREATE TABLE private.channels (
     created_by UUID REFERENCES private.users(id),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-ALTER TABLE private.channels OWNER TO app_user;
--- GRANT ALL PRIVILEGES ON private.channels TO app_user; -- Not needed as app_user is owner
-
-
+-- ALTER TABLE private.channels OWNER TO app_user;
+GRANT ALL PRIVILEGES ON private.channels TO app_user; -- Not needed as app_user is owner
+GRANT ALL PRIVILEGES ON private.channels TO app_admin; -- Not needed as app_user is owner
 
 -- Channel Members (for private channels and user participation)
 CREATE TABLE private.channel_members (
@@ -34,8 +34,9 @@ CREATE TABLE private.channel_members (
     joined_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     PRIMARY KEY (channel_id, user_id)
 );
-ALTER TABLE private.channel_members OWNER TO app_user;
--- GRANT ALL PRIVILEGES ON private.channel_members TO app_user; -- Not needed as app_user is owner
+-- ALTER TABLE private.channel_members OWNER TO app_user;
+GRANT ALL PRIVILEGES ON private.channel_members TO app_user; -- Not needed as app_user is owner
+GRANT ALL PRIVILEGES ON private.channel_members TO app_admin; -- Not needed as app_user is owner
 
 -- Messages table
 CREATE TABLE private.messages (
@@ -45,6 +46,7 @@ CREATE TABLE private.messages (
     content TEXT NOT NULL,
     sent_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-ALTER TABLE private.messages OWNER TO app_user;
--- GRANT ALL PRIVILEGES ON private.messages TO app_user; -- Not needed as app_user is owner
+-- ALTER TABLE private.messages OWNER TO app_user;
+GRANT ALL PRIVILEGES ON private.messages TO app_user; -- Not needed as app_user is owner
+GRANT ALL PRIVILEGES ON private.messages TO app_admin; -- Not needed as app_user is owner
 

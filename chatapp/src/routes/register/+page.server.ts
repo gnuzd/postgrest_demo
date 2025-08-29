@@ -19,7 +19,7 @@ export const actions: Actions = {
 
 		try {
 			const api = new Api();
-			const { data } = await api.login(form.data.email, form.data.password);
+			const { data } = await api.register(form.data.email, form.data.password);
 			if (data) token = data.token;
 		} catch (error: any) {
 			return message(form, error.message, { status: 400 });

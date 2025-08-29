@@ -1,7 +1,8 @@
 <script lang="ts">
 	import '../app.css';
-	import { Toaster } from '$lib/components/ui/sonner';
+	import { Toaster } from 'svelte-sonner';
 	import favicon from '$lib/assets/favicon.svg';
+	import Modaler from '$lib/components/modal/Modaler.svelte';
 
 	let { children } = $props();
 </script>
@@ -10,5 +11,8 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<Toaster />
-{@render children?.()}
+<Toaster richColors />
+<Modaler />
+<div class="flex flex-col h-dvh w-full">
+	{@render children?.()}
+</div>
