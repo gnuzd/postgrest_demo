@@ -1,5 +1,3 @@
--- 0004_private_chat_rls.sql
-
 -- Functions for RLS and authentication (placeholder - will be more complex with actual JWT)
 CREATE FUNCTION private.current_user_id() RETURNS UUID LANGUAGE plpgsql AS $$
   BEGIN
@@ -8,38 +6,16 @@ CREATE FUNCTION private.current_user_id() RETURNS UUID LANGUAGE plpgsql AS $$
 $$;
 
 
--- Admin bypass policies for various tables
-CREATE POLICY admin_bypass_policy ON private.users
-FOR ALL TO app_admin
-USING (true);
-
-CREATE POLICY admin_bypass_policy ON private.channels
-FOR ALL TO app_admin
-USING (true);
-
-CREATE POLICY admin_bypass_policy ON private.channel_members
-FOR ALL TO app_admin
-USING (true);
-
-CREATE POLICY admin_bypass_policy ON private.messages
-FOR ALL TO app_admin
-USING (true);
-
-
 -- RLS for private.users (users can see their own info)
 ALTER TABLE private.users ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY select_own_user ON private.users
-FOR ALL
-USING (id = private.current_user_id());
+CREATE POLICY select_own_user ON private.users FOR ALL USING (id = private.current_user_id());
 
 
 -- RLS for private.channels (users can see public channels and channels they are a member of)
 ALTER TABLE private.channels ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY select_public_channels ON private.channels
-FOR SELECT
-USING (is_private IS FALSE);
+CREATE POLICY select_public_channels ON private.channels FOR SELECT USING (is_private IS FALSE);
 
 CREATE POLICY select_member_channels ON private.channels
 FOR SELECT
@@ -123,25 +99,3 @@ CREATE TRIGGER add_owner_trigger
 AFTER INSERT ON private.channels
 FOR EACH ROW
 EXECUTE FUNCTION add_channel_owner_to_members();
-
-
--- Function and trigger to add a user as a member on their first message to a channel
-CREATE OR REPLACE FUNCTION add_member_on_first_message()
-RETURNS TRIGGER AS $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1
-    FROM private.channel_members
-    WHERE channel_id = NEW.channel_id AND user_id = NEW.user_id
-  ) THEN
-    INSERT INTO private.channel_members (channel_id, user_id, role)
-    VALUES (NEW.channel_id, NEW.user_id, 'member');
-  END IF;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER add_member_on_message_trigger
-AFTER INSERT ON private.messages
-FOR EACH ROW
-EXECUTE FUNCTION add_member_on_first_message();

@@ -1,9 +1,6 @@
 -- DROP DATABASE IF EXISTS app_db;
 -- CREATE DATABASE app_db;
 
-
--- 0001_base_setup_and_roles.sql
-
 -- Create a role for PostgREST
 CREATE ROLE authenticator NOINHERIT CREATEDB LOGIN PASSWORD 'password';
 CREATE ROLE web_anon NOLOGIN;
@@ -46,7 +43,5 @@ END;
 $$;
 
 -- This event trigger will fire after every ddl_command_end event
-CREATE EVENT TRIGGER pgrst_watch
-  ON ddl_command_end
-  EXECUTE PROCEDURE pgrst_watch();
+CREATE EVENT TRIGGER pgrst_watch ON ddl_command_end EXECUTE PROCEDURE pgrst_watch();
 
