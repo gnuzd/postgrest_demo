@@ -44,13 +44,17 @@ CREATE TABLE private.channel_members (
 GRANT ALL PRIVILEGES ON private.channel_members TO app_user; -- Not needed as app_user is owner
 GRANT ALL PRIVILEGES ON private.channel_members TO app_admin; -- Not needed as app_user is owner
 
+CREATE TYPE message_type AS ENUM ('system', 'user');
+
 -- Messages table
 CREATE TABLE private.messages (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     channel_id UUID REFERENCES private.channels(id),
     user_id UUID REFERENCES private.users(id),
     content TEXT NOT NULL,
-    sent_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    sent_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    message_type message_type NOT NULL DEFAULT 'user',
+    reply_to UUID REFERENCES private.messages(id)
 );
 -- ALTER TABLE private.messages OWNER TO app_user;
 GRANT ALL PRIVILEGES ON private.messages TO app_user; -- Not needed as app_user is owner

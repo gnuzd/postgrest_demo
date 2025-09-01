@@ -33,8 +33,18 @@ CREATE POLICY insert_own_membership ON private.channel_members FOR INSERT WITH C
 
 -- RLS for private.messages (users can see messages in channels they are members of)
 ALTER TABLE private.messages ENABLE ROW LEVEL SECURITY;
-CREATE POLICY select_messages_in_channel ON private.messages FOR SELECT USING (EXISTS (SELECT 1 FROM private.channel_members WHERE channel_id = private.messages.channel_id AND user_id = private.current_user_id()));
-CREATE POLICY insert_message_in_channel ON private.messages FOR INSERT WITH CHECK (user_id = private.current_user_id() AND EXISTS (SELECT 1 FROM private.channel_members WHERE channel_id = private.messages.channel_id AND user_id = private.current_user_id()));
+CREATE POLICY select_messages_in_channel ON private.messages
+FOR SELECT USING (
+    EXISTS (SELECT 1 FROM private.channels WHERE id = private.messages.channel_id AND is_private = FALSE)
+    OR EXISTS (SELECT 1 FROM private.channel_members WHERE channel_id = private.messages.channel_id AND user_id = private.current_user_id())
+);
+CREATE POLICY insert_message_in_channel ON private.messages
+FOR INSERT WITH CHECK (
+  (message_type = 'system' AND EXISTS (SELECT 1 FROM private.channel_members WHERE channel_id = private.messages.channel_id AND user_id = private.current_user_id() AND (role = 'owner' OR role = 'moderator')))
+  OR (user_id = private.current_user_id() AND (
+      EXISTS (SELECT 1 FROM private.channels WHERE id = private.messages.channel_id AND is_private = FALSE)
+       OR EXISTS (SELECT 1 FROM private.channel_members WHERE channel_id = private.messages.channel_id AND user_id = private.current_user_id())))
+);
 
 
 -- Create a function to set the user ID

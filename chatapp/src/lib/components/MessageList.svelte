@@ -13,7 +13,11 @@
 </div>
 
 {#each messages as item}
-	<div class="chat" class:chat-end={item.user_id === me.id}>
+	<div
+		class="chat"
+		class:chat-start={item.user_id !== me.id}
+		class:chat-end={item.user_id === me.id}
+	>
 		<div class="chat-image avatar">
 			<div class="w-10 rounded-full">
 				<img
