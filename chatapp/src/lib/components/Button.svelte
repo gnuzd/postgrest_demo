@@ -5,11 +5,16 @@
 
 	interface Props extends HTMLButtonAttributes {
 		children: Snippet;
+		loading?: boolean;
 	}
 
-	const { children, class: classes, ...rest }: Props = $props();
+	const { children, loading, class: classes, ...rest }: Props = $props();
 </script>
 
-<button class={clsx('btn', classes)} {...rest}>
+<button disabled={loading} class={clsx('btn', classes)} {...rest}>
+	{#if loading}
+		<span class="loading loading-spinner"></span>
+	{/if}
+
 	{@render children()}
 </button>

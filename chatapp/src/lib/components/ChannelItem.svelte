@@ -1,21 +1,27 @@
 <script lang="ts">
-	const { data } = $props();
+	import { goto } from '$app/navigation';
+
+	const { data, active } = $props();
 </script>
 
-<div class="p-2 flex justify-between hover:bg-secondary/30 rounded cursor-pointer">
-	<div class="flex gap-3 items-center">
-		<img
-			src={`https://api.dicebear.com/9.x/initials/svg?seed=${data.name}`}
-			alt={data.name}
-			class="size-12 rounded"
-		/>
+<li>
+	<a
+		class="list-row p-2 flex items-center hover:bg-base-300/50"
+		class:bg-base-300={active}
+		href={`/?channel=${data.id}`}
+		data-sveltekit-reload
+	>
+		<div>
+			<img
+				src={`https://api.dicebear.com/9.x/initials/svg?seed=${data.name}`}
+				alt={data.name}
+				class="size-10 rounded-box"
+			/>
+		</div>
 
 		<div>
-			<p class="text-lg text-base-content/80 font font-semibold">{data.name}</p>
-			<p class="text-sm text-base-content/70">{data.last_message}</p>
+			<div class="text-lg font-semibold">{data.name}</div>
+			<div class="text-xs opacity-60">Remaining Reason</div>
 		</div>
-	</div>
-	<div>
-		<p class="text-sm text-base-content/60">3m</p>
-	</div>
-</div>
+	</a>
+</li>

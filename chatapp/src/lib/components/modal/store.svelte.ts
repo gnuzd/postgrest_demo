@@ -1,4 +1,4 @@
-import type { Component, ComponentType, Snippet, SvelteComponent } from 'svelte';
+import type { Component, ComponentType, Snippet } from 'svelte';
 
 type Options<T> = {
 	props?: T;

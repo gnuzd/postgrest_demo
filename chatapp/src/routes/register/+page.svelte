@@ -7,14 +7,14 @@
 	import Input from '$lib/components/Input.svelte';
 	import { loginSchema } from '$lib/schema';
 
-	const { form, enhance, errors, message } = superForm(
+	const { form, enhance, errors, submitting, message } = superForm(
 		{ email: '', password: '' },
 		{ validators: zodClient(loginSchema) }
 	);
 
-	message.subscribe((content) => {
-		if (content) {
-			toast.error(content);
+	message.subscribe((res) => {
+		if (res?.error) {
+			toast.error(res.message);
 		}
 	});
 </script>
@@ -42,7 +42,7 @@
 				error={!!$errors.password?.length}
 				hint={$errors.password?.[0]}
 			/>
-			<Button type="submit" class="mt-5">Register</Button>
+			<Button type="submit" loading={$submitting} class="mt-5">Register</Button>
 			<p class="text-center mt-3 text-base-content/80">
 				Already have an account? <a href="/login" class="link font-medium">Sign in</a>
 			</p>

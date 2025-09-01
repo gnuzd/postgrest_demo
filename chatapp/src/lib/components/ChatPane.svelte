@@ -1,12 +1,15 @@
-<script>
+<script lang="ts">
 	import ChatInput from './ChatInput.svelte';
 	import MessageList from './MessageList.svelte';
+
+	const { messages, me } = $props();
+	let list = $state(messages);
 </script>
 
 <div class="p-2 flex flex-col h-full">
 	<div class="flex-1">
-		<MessageList data={[{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]} />
+		<MessageList {messages} {me} />
 	</div>
 
-	<ChatInput />
+	<ChatInput onSend={(message) => (list = [message, ...list])} />
 </div>

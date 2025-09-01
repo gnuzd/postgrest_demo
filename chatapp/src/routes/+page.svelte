@@ -11,6 +11,6 @@
 	</div>
 
 	<div class="flex-1">
-		<ChatPane />
+		<ChatPane messages={data.messages} me={data.user} />
 	</div>
 </div>

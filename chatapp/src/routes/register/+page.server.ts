@@ -19,17 +19,17 @@ export const actions: Actions = {
 
 		try {
 			const api = new Api();
-			const { data } = await api.register(form.data.email, form.data.password);
+			const { data } = await api.auth.register(form.data.email, form.data.password);
 			if (data) token = data.token;
 		} catch (error: any) {
-			return message(form, error.message, { status: 400 });
+			return message(form, { error: true, message: error.message }, { status: 400 });
 		}
 
 		if (token) {
 			cookies.set('session_token', token, { path: '/' });
 			throw redirect(302, '/');
 		} else {
-			return message(form, 'Invalid credentials', { status: 400 });
+			return message(form, { error: true, message: 'Invalid credentials' }, { status: 400 });
 		}
 	}
 };

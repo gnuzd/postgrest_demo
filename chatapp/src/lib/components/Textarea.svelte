@@ -1,8 +1,8 @@
 <script lang="ts">
 	import clsx from 'clsx';
-	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
 
-	interface Props extends HTMLInputAttributes {
+	interface Props extends HTMLTextareaAttributes {
 		label?: string;
 		error?: boolean;
 		hint?: string;
@@ -10,11 +10,9 @@
 
 	let {
 		label,
-		type = 'text',
 		name,
-		error,
 		hint,
-		class: classes,
+		class: classes = 'h-24',
 		value = $bindable(),
 		placeholder
 	}: Props = $props();
@@ -24,15 +22,8 @@
 	{#if label}
 		<legend class="fieldset-legend">{label}</legend>
 	{/if}
-	<input
-		{type}
-		{name}
-		class={clsx('input w-full', classes)}
-		bind:value
-		class:input-error={error}
-		{placeholder}
-	/>
+	<textarea {name} class={clsx('textarea', classes)} bind:value {placeholder}></textarea>
 	{#if hint}
-		<p class="label" class:text-error={error}>{hint}</p>
+		<div class="label">{hint}</div>
 	{/if}
 </fieldset>

@@ -66,6 +66,24 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+create function public.me() RETURNS jsonb AS $$
+DECLARE
+    _user private.users;
+BEGIN
+  SELECT * INTO _user FROM private.users au WHERE au.id = private.current_user_id();
+  -- IF _user IS NOT NULL THEN
+    RETURN json_build_object(
+      'id', _user.id,
+      'email', _user.email,
+      'display_name', _user.display_name,
+      'image', _user.image
+    );
+  -- ELSE
+    -- RETURN NULL;
+  -- END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- Grant execution to authenticator role
 GRANT EXECUTE ON FUNCTION public.register(TEXT, TEXT) TO authenticator;
 GRANT EXECUTE ON FUNCTION public.login(TEXT, TEXT) TO authenticator;

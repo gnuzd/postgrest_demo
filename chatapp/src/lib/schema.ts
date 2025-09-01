@@ -11,8 +11,15 @@ export type LoginSchema = typeof loginSchema;
 
 export const channleSchema = z
 	.object({
-		name: z.string(),
-		description: z.string(),
-		isPrivate: z.boolean()
+		name: z.string().min(1),
+		description: z.string()
+		// isPrivate: z.boolean()
 	})
 	.required({ name: true });
+
+export const messageSchema = z
+	.object({
+		content: z.string().min(1),
+		channelId: z.string()
+	})
+	.required();

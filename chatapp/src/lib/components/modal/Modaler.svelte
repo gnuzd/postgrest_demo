@@ -1,28 +1,7 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	import { twMerge } from 'tailwind-merge';
 
 	import { modal } from './store.svelte';
-
-	// type Props = {
-	// 	title?: string | Snippet;
-	// 	content: Snippet;
-	// 	action?: Snippet;
-	// 	onclose?: () => void;
-	// 	dismissible?: boolean;
-	// 	open?: boolean;
-	// 	class?: string;
-	// };
-	//
-	// let {
-	// 	open = $bindable(),
-	// 	title,
-	// 	content,
-	// 	action,
-	// 	dismissible = false,
-	// 	onclose,
-	// 	...rest
-	// }: Props = $props();
 </script>
 
 <dialog class={twMerge('modal', modal.state.options?.class)} open={modal.state.open}>
