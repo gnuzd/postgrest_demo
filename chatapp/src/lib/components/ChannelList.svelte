@@ -7,9 +7,39 @@
 	import CreateChannelModal from './CreateChannelModal.svelte';
 	import { page } from '$app/state';
 
-	const { channels } = $props();
+	const { channels, me } = $props();
 
 	let list = $state(channels);
+
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		// Connect to the Fastify WebSocket server
+		let ws = new WebSocket('ws://localhost:3000/ws');
+		ws.onopen = () => {
+			console.log('Connected to WebSocket server.');
+
+			// Send a message to the server to specify the channel
+			const topicMessage = { topic: 'channels' };
+			ws.send(JSON.stringify(topicMessage));
+		};
+
+		ws.onmessage = (event) => {
+			const message = JSON.parse(event.data);
+			console.log('Received message from server:', message);
+			if (message.topic === 'channels' && message.new.user_id !== me.id)
+				list = [...list, message.new];
+		};
+
+		ws.onclose = () => {
+			console.log('WebSocket connection closed.');
+		};
+
+		return () => {
+			// Clean up the connection when the component is unmounted
+			ws.close();
+		};
+	});
 </script>
 
 <div class="flex flex-col h-full">

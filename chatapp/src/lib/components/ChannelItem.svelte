@@ -9,7 +9,6 @@
 		class="list-row p-2 flex items-center hover:bg-base-300/50"
 		class:bg-base-300={active}
 		href={`/?channel=${data.id}`}
-		data-sveltekit-reload
 	>
 		<div>
 			<img

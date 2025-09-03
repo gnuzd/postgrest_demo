@@ -23,18 +23,17 @@ export const actions = {
 			return message(form, { error: true, message: error.message }, { status: 400 });
 		}
 	},
-	createMessage: async ({ cookies, request, url }) => {
+	createMessage: async ({ cookies, request }) => {
 		const token = cookies.get('session_token');
 		const form = await superValidate(request, zod(messageSchema));
 
 		if (!token) return fail(403, { form });
 		if (!form.valid) return fail(400, { form });
-		console.log(form.data);
 
 		try {
 			const api = new Api(token);
 			const res = await api.message.create({
-				content: form.data.content,
+				body: form.data.body,
 				channelId: form.data.channelId
 			});
 			return message(form, { data: res?.data?.[0] });

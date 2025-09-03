@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<div class="chat-bubble">
-			{item.content}
+			{item.body}
 		</div>
 	</div>
 {/each}

@@ -44,10 +44,11 @@ CREATE TABLE private.messages (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     channel_id UUID REFERENCES private.channels(id),
     user_id UUID REFERENCES private.users(id),
-    content TEXT NOT NULL,
+    body TEXT NOT NULL,
     sent_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     message_type message_type NOT NULL DEFAULT 'user',
-    reply_to UUID REFERENCES private.messages(id)
+    reply_to UUID REFERENCES private.messages(id),
+    read_by UUID[] DEFAULT ARRAY[]::UUID[]
 );
 ALTER TABLE private.messages OWNER TO app_admin;
 GRANT ALL PRIVILEGES ON private.messages TO app_user; 

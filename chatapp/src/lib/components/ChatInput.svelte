@@ -13,14 +13,17 @@
 	const { onSend } = $props();
 
 	const { form, enhance, message } = superForm(
-		{ content: '', channelId: page.url.searchParams.get('channel') },
+		{ body: '', channelId: page.url.searchParams.get('channel') },
 		{ validators: zodClient(messageSchema) }
 	);
 
 	message.subscribe((res) => {
 		if (res?.error) {
 			toast.error(res.message);
+			return;
 		}
+		console.log('res: ', res);
+
 		if (res?.data) {
 			onSend(res.data);
 		}
@@ -30,10 +33,10 @@
 <form method="POST" action="/actions?/createMessage" use:enhance>
 	<div class="flex gap-3 items-center">
 		<div class="flex-1">
-			<Input name="content" class="w-full" bind:value={$form.content} />
+			<Input name="body" class="w-full" bind:value={$form.body} />
 		</div>
 		<Input name="channelId" class="hidden" bind:value={$form.channelId} />
-		<Button type="submit" disabled={!$form.content} class="btn-ghost btn-square">
+		<Button type="submit" disabled={!$form.body} class="btn-ghost btn-square">
 			<Send />
 		</Button>
 	</div>

@@ -16,10 +16,10 @@ export class Message {
 		});
 	}
 
-	create(args: { channelId: string; content: string }) {
+	create(args: { channelId: string; body: string }) {
 		return this.instance.post(
 			'/messages',
-			{ channel_id: args.channelId, content: args.content },
+			{ channel_id: args.channelId, body: args.body },
 			{
 				headers: {
 					Prefer: 'return=representation',

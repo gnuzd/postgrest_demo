@@ -19,7 +19,7 @@ export const channleSchema = z
 
 export const messageSchema = z
 	.object({
-		content: z.string().min(1),
+		body: z.string().min(1),
 		channelId: z.string()
 	})
 	.required();
